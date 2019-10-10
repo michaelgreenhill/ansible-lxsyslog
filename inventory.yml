@@ -1,0 +1,8 @@
+---
+
+all:
+  hosts:
+    demo_host_01:
+      ansible_host: "demo_host_01.me.local"
+    demo_host_02:
+      ansible_host: "demo_host_02.me.local"

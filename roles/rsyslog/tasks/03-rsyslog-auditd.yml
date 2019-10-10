@@ -1,0 +1,11 @@
+---
+
+- name: syslog | Copy the auditd config
+  copy:
+    dest: /etc/rsyslog.d/10-auditd.conf
+    src: files/10-auditd.conf
+    owner: root
+    group: root
+    mode: 0644 
+  notify:
+  - reload_rsyslog

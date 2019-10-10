@@ -1,0 +1,33 @@
+---
+
+- name: syslog | Check if fail2ban exists
+  stat: 
+    path: /var/log/fail2ban.log
+  register: fail2ban_exists
+
+- name: syslog | Check if openvpnas exists
+  stat: 
+    path: "/var/log/openvpnas.log"
+  register: openvpnas_exists
+
+- name: syslog | Check if mysqld exists
+  stat: 
+    path: "/var/log/mysql/error.log"
+  register: mysqld_exists
+
+- name: syslog | Check if pihole exists
+  stat: 
+    path: "/var/log/pihole.log"
+  register: pihole_exists
+
+- name: nginx | Find all error logs
+  find:
+    paths: /var/log/nginx
+    patterns: ".*?error*?.log$"
+    use_regex: yes
+  register: nginx_error_logs
+
+- name: auditd | Check it auditd exists
+  stat: 
+    path: "/var/log/audit/audit.log"
+  register: auditd_exists

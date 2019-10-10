@@ -1,0 +1,13 @@
+---
+
+- name: syslog | Configure nginx error log shipping
+  lineinfile:
+    path: /etc/rsyslog.d/10-nginx-error-logs.conf
+    regexp: '^input\(type="imfile" File="{{ item.path }}" Tag="nginx" Severity="error" Facility="local0"\)'
+    line: 'input(type="imfile" File="{{ item.path }}" Tag="nginx" Severity="error" Facility="local0")'
+    owner: root
+    group: root
+    mode: 0644
+    create: yes
+    state: present
+  with_items: "{{ nginx_error_logs.files }}"

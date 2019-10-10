@@ -1,0 +1,19 @@
+---
+
+- name: Install rsyslog 
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+  - apt:
+      name: rsyslog
+      state: present
+  tags:
+  - rsyslog
+
+- name: Configure Rsyslog shipping
+  hosts: all
+  become: yes
+  become_method: sudo
+  roles:
+  - rsyslog

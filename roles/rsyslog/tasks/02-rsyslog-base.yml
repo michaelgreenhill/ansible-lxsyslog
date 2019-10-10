@@ -1,0 +1,44 @@
+---
+
+- name: syslog | Set the shipping server config
+  lineinfile:
+    path: /etc/rsyslog.d/99-graylog.conf
+    regexp: "^\\*\\.\\* @{{ syslog_server }}:{{ syslog_port }};RSYSLOG_SyslogProtocol23Format"
+    line: "*.* @{{ syslog_server }}:{{ syslog_port }};RSYSLOG_SyslogProtocol23Format"
+    owner: root
+    group: root
+    mode: 0644
+    create: yes
+    state: present
+  notify:
+  - reload_rsyslog
+
+- name: syslog | Remove old shipping server config
+  lineinfile:
+    path: /etc/rsyslog.d/99-graylog.conf
+    regexp: "^.*\\.\\* @192.168.1.64:([0-9]{4});RSYSLOG_SyslogProtocol23Format"
+    owner: root
+    group: root
+    mode: 0644
+    create: yes
+    state: absent
+  notify:
+  - reload_rsyslog
+
+- name: syslog | Load the infile module
+  lineinfile:
+    path: /etc/rsyslog.d/01-module-lineinfile.conf
+    regexp: "^module\\(load=\"imfile\" PollingInterval=\"5\" reopenOnTruncate=\"on\"\\)"
+    line: "module(load=\"imfile\" PollingInterval=\"5\" reopenOnTruncate=\"on\")"
+    owner: root
+    group: root
+    mode: 0644
+    create: yes
+  when: 
+    (fail2ban_exists.stat.exists == true) or 
+    (openvpnas_exists.stat.exists == true) or 
+    (mysqld_exists.stat.exists == true) or 
+    (pihole_exists.stat.exists == true) or
+    (nginx_error_logs.files|length > 0)
+  notify:
+  - reload_rsyslog

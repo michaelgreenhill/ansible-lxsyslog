@@ -1,0 +1,25 @@
+---
+
+- name: syslog | Copy the pihole config
+  copy:
+    dest: /etc/rsyslog.d/10-pihole.conf
+    src: files/10-pihole.conf
+    owner: root
+    group: root
+    mode: 0644 
+  notify:
+  - reload_rsyslog
+
+- name: syslog | Set the pihole shipping server
+  lineinfile:
+    path: /etc/rsyslog.d/99-graylog.conf
+    regexp: "^local7\\.\\* @{{ syslog_server }}:5141;RSYSLOG_SyslogProtocol23Format"
+    line: "local7.* @{{ syslog_server }}:5141;RSYSLOG_SyslogProtocol23Format"
+    owner: root
+    group: root
+    mode: 0644
+    create: yes
+    state: present
+    insertbefore: "^\\*\\.\\* @{{ syslog_server }}:{{ syslog_port }};RSYSLOG_SyslogProtocol23Format"
+  notify:
+  - reload_rsyslog

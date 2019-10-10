@@ -1,0 +1,25 @@
+---
+
+- include: "01-register.yml"
+
+- include: "02-rsyslog-base.yml"
+
+- include: "03-rsyslog-fail2ban.yml"
+  when: 
+    fail2ban_exists.stat.exists == true
+
+- include: "03-rsyslog-openvpnas.yml"
+  when: 
+    openvpnas_exists.stat.exists == true
+
+- include: "03-rsyslog-pihole.yml"
+  when: 
+    pihole_exists.stat.exists == true
+
+- include: "03-rsyslog-auditd.yml"
+  when: 
+    auditd_exists.stat.exists == true
+
+- include: "03-rsyslog-nginx.yml"
+  when: 
+    nginx_error_logs.files|length > 0

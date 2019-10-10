@@ -1,0 +1,4 @@
+---
+
+syslog_server: "10.0.0.66"
+syslog_port: "5140"

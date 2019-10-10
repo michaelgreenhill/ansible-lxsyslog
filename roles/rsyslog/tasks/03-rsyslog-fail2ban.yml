@@ -1,0 +1,11 @@
+---
+
+- name: syslog | Copy the fail2ban config
+  copy:
+    dest: /etc/rsyslog.d/10-fail2ban.conf
+    src: files/10-fail2ban.conf
+    owner: root
+    group: root
+    mode: 0644 
+  notify:
+  - reload_rsyslog

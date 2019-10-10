@@ -1,0 +1,25 @@
+---
+
+- name: syslog | Copy the openvpnas config
+  copy:
+    dest: /etc/rsyslog.d/10-openvpnas.conf
+    src: files/10-openvpnas.conf
+    owner: root
+    group: root
+    mode: 0644 
+  notify:
+  - reload_rsyslog
+
+- name: syslog | Set the openvpnas shipping server
+  lineinfile:
+    path: /etc/rsyslog.d/99-graylog.conf
+    regexp: "^openvpnas\\.\\* @{{ syslog_server }}:5142;RSYSLOG_SyslogProtocol23Format"
+    line: "openvpnas.* @{{ syslog_server }}:5142;RSYSLOG_SyslogProtocol23Format"
+    owner: root
+    group: root
+    mode: 0644
+    create: yes
+    state: present
+    insertbefore: "^\\*\\.\\* @{{ syslog_server }}:{{ syslog_port }};RSYSLOG_SyslogProtocol23Format"
+  notify:
+  - reload_rsyslog
